@@ -1,62 +1,72 @@
-# API Authorization
+# API Authentication
 
 ## Overview
 
-Authorization determines what an authenticated user is permitted to access or perform.
+Authentication verifies the identity of a client before allowing access to protected API resources.
 
-Authentication verifies the identity of a client, while authorization determines whether that client has permission to access a requested resource.
+A secure REST API should require authentication for endpoints that handle protected or sensitive information.
 
-## Authorization Requirements
+## Authentication Flow
 
-Protected API resources should enforce authorization checks before allowing access.
+A typical authentication process follows these steps:
 
-Authorization decisions should be based on the authenticated user's assigned roles or permissions.
+1. The client submits valid authentication credentials.
+2. The server verifies the credentials.
+3. The server issues an access token when authentication succeeds.
+4. The client includes the access token with subsequent protected requests.
+5. The server validates the token before processing the request.
 
-## Role Based Access
+## Bearer Token Example
 
-A REST API may use roles to control access to resources.
+Protected requests can use a bearer token in the HTTP Authorization header.
 
-Example roles include:
+```http
+GET /api/v1/users/123
+Authorization: Bearer <access-token>
+Accept: application/json
+```
 
-- `admin`
-- `manager`
-- `user`
+## Authentication Requirements
 
-Administrators may have access to administrative resources, while regular users should only access resources permitted by their assigned role.
+Protected API endpoints should require valid authentication before allowing access to protected resources.
 
-## Example Authorization Flow
+Authentication credentials should be protected and should not be unnecessarily exposed in API responses or logs.
 
-A typical authorization process follows these steps:
+## Access Tokens
 
-1. The client authenticates successfully.
-2. The server identifies the authenticated user.
-3. The server determines the user's assigned roles or permissions.
-4. The server checks whether the requested operation is allowed.
-5. The server processes the request only when authorization succeeds.
+Access tokens are used to authenticate subsequent requests after the client has successfully authenticated.
 
-## Forbidden Requests
-
-If an authenticated user does not have permission to perform an operation, the API should return an HTTP `403 Forbidden` response.
+Clients should include the access token in the Authorization header when accessing protected endpoints.
 
 Example:
 
 ```http
-HTTP/1.1 403 Forbidden
+Authorization: Bearer <access-token>
+```
+
+## Authentication Failure
+
+When authentication is missing or invalid, the API should reject the request.
+
+Example response:
+
+```http
+HTTP/1.1 401 Unauthorized
 Content-Type: application/json
 ```
 
 ```json
 {
-  "error": "forbidden",
-  "message": "You do not have permission to perform this operation."
+  "error": "unauthorized",
+  "message": "Authentication is required."
 }
 ```
 
 ## Security Considerations
 
-- Authorization checks should be performed on protected resources.
-- Permissions should be enforced on the server side.
-- Clients should not be trusted to enforce authorization.
-- Users should only receive access to resources permitted by their roles or permissions.
-- Administrative endpoints should require appropriate privileges.
-- Authorization failures should not expose sensitive implementation details.
+- Protect authentication credentials from unauthorized access.
+- Use HTTPS when transmitting authentication credentials and access tokens.
+- Do not expose access tokens unnecessarily.
+- Do not include sensitive authentication information in error messages.
+- Avoid storing sensitive authentication information in application logs.
+- Validate authentication credentials or access tokens before processing protected requests.
