@@ -2,81 +2,87 @@
 
 ## Overview
 
-Security controls help protect REST APIs from unauthorized access, malformed requests, information disclosure, and other common security risks.
-
-The controls described in this document should be applied consistently across protected API resources.
+REST APIs should implement appropriate security controls to protect authentication credentials, user information, application resources, and API operations.
 
 ## Authentication
 
-API endpoints that handle protected or sensitive information should require authentication.
+Protected endpoints should require valid authentication.
 
-Authentication mechanisms should securely verify the identity of clients before granting access.
+Authentication credentials and access tokens should be transmitted securely.
+
+Example:
+
+```http
+Authorization: Bearer <access-token>
+```
 
 ## Authorization
 
-Authenticated users should only be allowed to perform actions and access resources permitted by their assigned roles or permissions.
+Authenticated users should only access resources permitted by their assigned roles or permissions.
 
-Authorization checks should be enforced on the server side.
+Authorization checks should be performed on the server.
 
 ## Input Validation
 
-All API inputs should be validated before processing.
+API input should be validated before processing.
 
-Validation should cover:
+Validation helps reduce risks associated with malformed requests and unexpected input.
 
-- Request parameters
-- Query parameters
-- Request bodies
-- Data types
+Examples of validation include:
+
 - Required fields
+- Data types
+- String length
+- Numeric ranges
 - Allowed values
+- Request structure
 
-Proper validation helps reduce malformed requests and common injection risks.
+## Transport Security
+
+API communication should use HTTPS to protect information transmitted between clients and servers.
+
+Sensitive credentials and access tokens should not be transmitted over unencrypted connections.
 
 ## Data Protection
 
 Sensitive information should be protected during transmission and should not be unnecessarily exposed through API responses or logs.
 
-Sensitive credentials, access tokens, passwords, and other secrets should not be included in error messages or normal API responses.
+Applications should avoid returning sensitive information that is not required by the client.
+
+## Access Tokens
+
+Access tokens should be protected from unauthorized disclosure.
+
+Applications should avoid placing access tokens in URLs.
+
+Tokens should be transmitted using appropriate authentication headers.
 
 ## Error Handling
 
-API errors should use consistent HTTP status codes and response structures.
+API errors should use consistent HTTP status codes and messages.
 
-Error messages should provide useful information without exposing:
+Error responses should avoid exposing sensitive implementation details.
 
-- Stack traces
-- Database details
-- Internal file paths
-- Credentials
-- Access tokens
-- Other sensitive implementation details
+## Logging
 
-## Least Privilege
+Security relevant events may be recorded in application logs.
 
-Users, services, and applications should receive only the permissions required for their intended operations.
+Logs should be protected from unauthorized access and should not unnecessarily contain passwords, access tokens, API keys, or other sensitive information.
 
-Limiting permissions reduces the potential impact of compromised accounts or unauthorized access.
+## Rate Limiting
 
-## Logging and Monitoring
+Rate limiting can help reduce excessive requests and protect API resources from abuse.
 
-Security relevant events should be logged securely for monitoring and investigation.
-
-Logs should avoid storing passwords, authentication tokens, or other sensitive secrets.
-
-## Secure API Design
-
-API endpoints should use secure communication and enforce authentication and authorization where required.
-
-Security controls should be applied consistently across all protected endpoints rather than relying on individual clients to enforce them.
+Limits should be appropriate for the API's expected usage.
 
 ## Security Checklist
 
-- Require authentication for protected resources.
-- Enforce server side authorization.
-- Validate incoming API data.
-- Protect sensitive information during transmission.
-- Avoid exposing secrets in responses and logs.
-- Apply least privilege.
-- Use consistent error handling.
-- Maintain appropriate security logging and monitoring.
+- Require authentication for protected endpoints.
+- Enforce authorization for protected resources.
+- Validate API input.
+- Use HTTPS for API communication.
+- Protect access tokens and credentials.
+- Avoid exposing sensitive information in responses.
+- Use consistent error responses.
+- Protect application logs.
+- Consider rate limiting for exposed endpoints.
