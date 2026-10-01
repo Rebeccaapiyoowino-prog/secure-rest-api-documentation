@@ -4,7 +4,9 @@
 
 This portfolio project demonstrates practical approaches to designing, documenting, and securing REST APIs.
 
-The documentation covers authentication, authorization, API endpoints, input validation, error handling, secure API design principles, and common security considerations for web services.
+The project provides structured technical documentation covering authentication, authorization, API endpoints, request and response formats, input validation, error handling, and common API security controls.
+
+It also includes an OpenAPI specification and practical request and response examples.
 
 ## Project Objectives
 
@@ -15,82 +17,125 @@ The documentation covers authentication, authorization, API endpoints, input val
 - Identify common API security risks
 - Provide practical security recommendations
 - Maintain clear and developer friendly technical documentation
+- Provide an OpenAPI specification for API reference
 
 ## Documentation
 
-The project documentation is organized into the following sections:
-
 ### Authentication
 
-Explains how clients authenticate with protected API resources.
+Explains how clients authenticate with protected API resources and how bearer tokens can be used for authenticated requests.
 
-See [`docs/authentication.md`](docs/authentication.md).
+[View Authentication Documentation](docs/authentication.md)
 
 ### Authorization
 
-Explains how authenticated users are granted access based on roles or permissions.
+Describes access control, permissions, roles, and resource authorization requirements.
 
-See [`docs/authorization.md`](docs/authorization.md).
+[View Authorization Documentation](docs/authorization.md)
 
 ### API Endpoints
 
-Documents example REST API endpoints, requests, responses, and common HTTP status codes.
+Documents the available user endpoints, expected requests, and API behavior.
 
-See [`docs/api-endpoints.md`](docs/api-endpoints.md).
+[View API Endpoints](docs/api-endpoints.md)
 
 ### Error Handling
 
-Documents API error responses and standard HTTP status codes.
+Documents standard API errors, HTTP status codes, and structured error responses.
 
-See [`docs/error-handling.md`](docs/error-handling.md).
+[View Error Handling](docs/error-handling.md)
 
 ### Security Controls
 
-Describes security controls for authentication, authorization, input validation, transport security, data protection, logging, and rate limiting.
+Describes recommended security controls including authentication, authorization, input validation, HTTPS, rate limiting, CORS, logging, and secrets management.
 
-See [`docs/security-controls.md`](docs/security-controls.md).
+[View Security Controls](docs/security-controls.md)
 
-## Example API
+## API Examples
 
-The documentation uses the following example endpoint:
+Practical examples of authenticated requests, successful responses, validation errors, authentication errors, and authorization errors are available here:
+
+[View API Requests and Responses](examples/requests-and-responses.md)
+
+## OpenAPI Specification
+
+The project includes an OpenAPI 3.0 specification describing the API structure, endpoints, authentication requirements, request schemas, response schemas, and error responses.
+
+[View OpenAPI Specification](openapi/openapi.yaml)
+
+## Example Endpoint
+
+### Get User
 
 ```http
-GET /api/v1/users/{id}
-```
-
-Protected requests may include a bearer access token:
-
-```http
+GET /api/v1/users/123
 Authorization: Bearer <access-token>
+Accept: application/json
 ```
 
-## Security Principles
+Example response:
 
-The project emphasizes the following principles:
+```json
+{
+  "id": 123,
+  "name": "Example User",
+  "email": "user@example.com"
+}
+```
 
-- Authentication
-- Authorization
+## Security Considerations
+
+The documentation considers several important API security principles:
+
+- Authentication for protected resources
+- Authorization based on roles and permissions
 - Input validation
-- Secure transport
-- Data protection
-- Consistent error handling
-- Secure logging
-- Access control
+- Secure HTTPS communication
+- Protection of sensitive information
+- Secure handling of API credentials
+- Consistent error responses
 - Rate limiting
+- CORS restrictions
+- Security relevant logging
+- Secure secrets management
 
 ## Project Structure
 
 ```text
 secure-rest-api-documentation/
-├── README.md
-└── docs/
-    ├── authentication.md
-    ├── authorization.md
-    ├── api-endpoints.md
-    ├── error-handling.md
-    └── security-controls.md
+│
+├── docs/
+│   ├── api-endpoints.md
+│   ├── authentication.md
+│   ├── authorization.md
+│   ├── error-handling.md
+│   └── security-controls.md
+│
+├── examples/
+│   └── requests-and-responses.md
+│
+├── openapi/
+│   └── openapi.yaml
+│
+└── README.md
 ```
 
-## Purpose
+## Technology and Standards
 
-This project is intended as a technical documentation and cybersecurity portfolio project demonstrating an understanding of secure REST API design and documentation practices.
+- REST API design principles
+- HTTP methods and status codes
+- JSON request and response formats
+- Bearer token authentication
+- OpenAPI 3.0
+- API security principles
+- Markdown technical documentation
+
+## Disclaimer
+
+This repository is a documentation and portfolio project intended to demonstrate API documentation and security design practices. The example endpoints and API responses are illustrative and are not connected to a production service.
+
+## Author
+
+Rebeccaapiyoowino-prog
+
+This project demonstrates practical skills in technical documentation, API security concepts, REST API design, and OpenAPI specification.
