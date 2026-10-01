@@ -2,38 +2,103 @@
 
 ## Overview
 
-Consistent error handling helps API clients understand why a request failed and allows developers to troubleshoot problems safely.
+Consistent error handling helps API clients understand why a request failed and allows applications to respond appropriately.
 
-A secure REST API should return appropriate HTTP status codes and useful error messages without exposing sensitive implementation details.
+API errors should provide useful information without exposing sensitive implementation details.
 
 ## HTTP Status Codes
 
-The API should use standard HTTP status codes to communicate the result of a request.
+The API may use standard HTTP status codes to communicate request results.
 
-Common status codes include:
-
-- `200 OK` — The request was successfully processed.
-- `201 Created` — A new resource was successfully created.
-- `204 No Content` — The request succeeded without returning a response body.
-- `400 Bad Request` — The request contains invalid or malformed data.
-- `401 Unauthorized` — Authentication is required or the supplied credentials are invalid.
-- `403 Forbidden` — The client is authenticated but does not have permission to perform the requested operation.
-- `404 Not Found` — The requested resource could not be found.
-- `409 Conflict` — The request conflicts with the current state of the resource.
-- `422 Unprocessable Entity` — The request is syntactically valid but contains validation errors.
-- `500 Internal Server Error` — An unexpected server-side error occurred.
+| Status Code | Meaning |
+|-------------|---------|
+| 200 | Request completed successfully |
+| 201 | Resource created successfully |
+| 204 | Request completed with no response body |
+| 400 | Bad request or invalid input |
+| 401 | Authentication is required or invalid |
+| 403 | Authenticated user is not authorized |
+| 404 | Requested resource was not found |
+| 500 | Unexpected server error |
 
 ## Error Response Format
 
-Error responses should use a consistent structure.
+API errors should use a consistent JSON structure.
 
 Example:
 
 ```json
 {
-  "error": "validation_error",
-  "message": "The request contains invalid data.",
-  "details": {
-    "email": "A valid email address is required."
-  }
+  "error": "invalid_request",
+  "message": "The request contains invalid parameters."
 }
+```
+
+## 400 Bad Request
+
+Returned when the client sends invalid or malformed input.
+
+```json
+{
+  "error": "invalid_request",
+  "message": "The request contains invalid parameters."
+}
+```
+
+## 401 Unauthorized
+
+Returned when authentication is missing or invalid.
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Authentication is required."
+}
+```
+
+## 403 Forbidden
+
+Returned when an authenticated user does not have permission to perform the requested operation.
+
+```json
+{
+  "error": "forbidden",
+  "message": "You do not have permission to perform this operation."
+}
+```
+
+## 404 Not Found
+
+Returned when the requested resource does not exist.
+
+```json
+{
+  "error": "not_found",
+  "message": "The requested resource was not found."
+}
+```
+
+## 500 Internal Server Error
+
+Returned when an unexpected error occurs on the server.
+
+```json
+{
+  "error": "internal_server_error",
+  "message": "An unexpected error occurred."
+}
+```
+
+## Security Considerations
+
+Error responses should not expose:
+
+- Passwords
+- Authentication tokens
+- API keys
+- Database credentials
+- Internal file paths
+- Stack traces
+- Sensitive system configuration
+
+Detailed diagnostic information should be recorded securely in server-side logs when appropriate.
