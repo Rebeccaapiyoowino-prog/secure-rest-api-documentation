@@ -1,0 +1,288 @@
+openapi: 3.0.3
+
+info:
+  title: Secure REST API
+  description: |
+    OpenAPI specification for the Secure REST API documentation portfolio project.
+    The specification documents authentication, authorization, user endpoints,
+    request validation, and standard error responses.
+  version: 1.0.0
+
+servers:
+  - url: https://api.example.com
+    description: Example API server
+
+tags:
+  - name: Users
+    description: User management endpoints
+
+paths:
+
+  /api/v1/users/{id}:
+
+    get:
+      tags:
+        - Users
+      summary: Get a user
+      description: Retrieves information about a specific user.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the user.
+          schema:
+            type: integer
+            example: 123
+
+      responses:
+
+        "200":
+          description: User retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+        "401":
+          description: Authentication is required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "403":
+          description: User is not authorized to access the resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "404":
+          description: User was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    put:
+      tags:
+        - Users
+      summary: Update a user
+      description: Updates information for an existing user.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the user.
+          schema:
+            type: integer
+            example: 123
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+
+      responses:
+
+        "200":
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+        "400":
+          description: Invalid request data.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "401":
+          description: Authentication is required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "403":
+          description: User is not authorized to update the resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "404":
+          description: User was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      description: Deletes a specific user.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the user.
+          schema:
+            type: integer
+            example: 123
+
+      responses:
+
+        "204":
+          description: User deleted successfully.
+
+        "401":
+          description: Authentication is required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "403":
+          description: User is not authorized to delete the resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "404":
+          description: User was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/users:
+
+    post:
+      tags:
+        - Users
+      summary: Create a user
+      description: Creates a new user.
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+
+      responses:
+
+        "201":
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+        "400":
+          description: Invalid request data.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "401":
+          description: Authentication is required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "403":
+          description: User is not authorized to create users.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          example: 123
+        name:
+          type: string
+          example: Example User
+        email:
+          type: string
+          format: email
+          example: user@example.com
+
+    CreateUserRequest:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: Example User
+        email:
+          type: string
+          format: email
+          example: user@example.com
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: Updated User
+        email:
+          type: string
+          format: email
+          example: updated@example.com
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: invalid_request
+        message:
+          type: string
+          example: The request contains invalid parameters.
