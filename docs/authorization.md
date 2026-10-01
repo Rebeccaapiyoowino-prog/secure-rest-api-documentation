@@ -2,44 +2,61 @@
 
 ## Overview
 
-Authorization determines what an authenticated user or client is allowed to access within an API.
+Authorization determines what an authenticated user is permitted to access or perform.
 
-Authentication verifies identity, while authorization verifies whether that authenticated identity has permission to perform a requested action.
+Authentication verifies the identity of a client, while authorization determines whether that client has permission to access a requested resource.
 
-A secure REST API should enforce authorization checks for protected resources and operations.
+## Authorization Requirements
 
-## Role Based Access Control
+Protected API resources should enforce authorization checks before allowing access.
 
-Role based access control can be used to assign permissions according to a user's role.
+Authorization decisions should be based on the authenticated user's assigned roles or permissions.
 
-Typical roles may include:
+## Role Based Access
 
-- Administrator
-- Standard user
-- Read only user
+A REST API may use roles to control access to resources.
 
-Each role should have only the permissions required to perform its intended functions.
+Example roles include:
 
-## Authorization Checks
+- `admin`
+- `manager`
+- `user`
 
-Authorization should be checked before allowing access to protected resources.
+Administrators may have access to administrative resources, while regular users should only access resources permitted by their assigned role.
+
+## Example Authorization Flow
 
 A typical authorization process follows these steps:
 
 1. The client authenticates successfully.
-2. The server identifies the user's assigned role or permissions.
-3. The server checks whether the requested operation is permitted.
-4. The server allows the operation when sufficient permissions exist.
-5. The server rejects the request when the required permission is missing.
+2. The server identifies the authenticated user.
+3. The server determines the user's assigned roles or permissions.
+4. The server checks whether the requested operation is allowed.
+5. The server processes the request only when authorization succeeds.
 
-## Resource Level Authorization
+## Forbidden Requests
 
-Authorization checks should also be applied to individual resources.
+If an authenticated user does not have permission to perform an operation, the API should return an HTTP `403 Forbidden` response.
 
-A user should not be able to access or modify another user's resources simply by changing an identifier in the request.
-
-For example:
+Example:
 
 ```http
-GET /api/v1/users/123
-Authorization: Bearer <access-token>
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+```
+
+```json
+{
+  "error": "forbidden",
+  "message": "You do not have permission to perform this operation."
+}
+```
+
+## Security Considerations
+
+- Authorization checks should be performed on protected resources.
+- Permissions should be enforced on the server side.
+- Clients should not be trusted to enforce authorization.
+- Users should only receive access to resources permitted by their roles or permissions.
+- Administrative endpoints should require appropriate privileges.
+- Authorization failures should not expose sensitive implementation details.
